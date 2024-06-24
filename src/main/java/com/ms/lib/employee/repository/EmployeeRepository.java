@@ -18,6 +18,8 @@ public interface EmployeeRepository extends JpaRepository<Employee, UUID> {
 
     List<Employee> findByDepartment(Department department);
 
+    List<Employee> findByDepartment_DepartmentName(String departmentName);
+
     //return totalElements not accurate for that page
     Page<Employee> findByDepartment(Department department, Pageable pageable);
 

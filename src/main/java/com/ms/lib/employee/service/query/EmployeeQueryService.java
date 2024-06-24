@@ -42,10 +42,7 @@ public class EmployeeQueryService {
     //size : 1
     //total e: 12
     public Page<EmployeeDto> retrieveEmployeeByDepartment(String departmentName, Pageable pageable){
-        Optional<Department>department = departmentRepository.findByDepartmentName(departmentName);
-        List<Employee> employeeList = new ArrayList<>();
-        if(department.isPresent())
-            employeeList = employeeRepository.findByDepartment(department.get());
+        List<Employee> employeeList = employeeRepository.findByDepartment_DepartmentName(departmentName);
 
         List<EmployeeDto> employeeDtoList = employeeList.stream().map(e -> employeeEntityToDtoConverter.convert(e)).toList();
 
