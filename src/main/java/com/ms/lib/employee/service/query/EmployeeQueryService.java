@@ -2,7 +2,6 @@ package com.ms.lib.employee.service.query;
 
 import com.ms.lib.employee.converter.entity.EmployeeEntityToDtoConverter;
 import com.ms.lib.employee.model.dto.EmployeeDto;
-import com.ms.lib.employee.model.entity.Department;
 import com.ms.lib.employee.model.entity.Employee;
 import com.ms.lib.employee.repository.DepartmentRepository;
 import com.ms.lib.employee.repository.EmployeeRepository;
@@ -32,15 +31,6 @@ public class EmployeeQueryService {
         return employee.orElse(null);
     }
 
-    //1
-    //page : 1
-    //size : 10
-    //total e: 10
-    //
-    //2
-    //page : 2
-    //size : 1
-    //total e: 12
     public Page<EmployeeDto> retrieveEmployeeByDepartment(String departmentName, Pageable pageable){
         List<Employee> employeeList = employeeRepository.findByDepartment_DepartmentName(departmentName);
 
@@ -61,25 +51,6 @@ public class EmployeeQueryService {
             return employeeDtoList.subList(startIndex, endIndex);
         else
             return new ArrayList<>();
-    }
-
-    //1
-    //page : 1
-    //size : 10
-    //total e: 10
-    //
-    //2
-    //page : 1
-    //size : 1
-    //total e: 1
-    public Page<EmployeeDto> retrieveEmployeePageByDepartment(String departmentName, Pageable pageable){
-        Optional<Department>department = departmentRepository.findByDepartmentName(departmentName);
-
-        Page<Employee> employeePage = new PageImpl<>(new ArrayList<>());
-        if(department.isPresent())
-            employeePage =  employeeRepository.findByDepartment(department.get(), pageable);
-
-        return new PageImpl<>(employeePage.stream().map(e -> employeeEntityToDtoConverter.convert(e)).toList());
     }
 
     public EmployeeDto retrieveEmployeeById(UUID employeeId){
