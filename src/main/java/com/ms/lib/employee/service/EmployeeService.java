@@ -36,12 +36,11 @@ public class EmployeeService {
 
         String name = employeeDto.getName();
         Employee employee = employeeQueryService.findEmployeeByName(name);
-        EmployeeRespondDto respondDto = new EmployeeRespondDto();
 
         //check employee name duplicated
         if(employee != null){
             log.error("Duplicated Employee Name = {}", employee.getName());
-            return respondDto.builder()
+            return EmployeeRespondDto.builder()
                     .status(RestEnum.STATUS_FAILED.getValue())
                     .errorCode("10000")
                     .description("Duplicated Employee Name = "+employee.getName())
@@ -53,7 +52,7 @@ public class EmployeeService {
         Department department = departmentQueryService.findDepartmentById(departmentId);
         if(department == null){
             log.error("Department does not exist = {}", department.getDepartmentName());
-            return respondDto.builder()
+            return EmployeeRespondDto.builder()
                     .status(RestEnum.STATUS_FAILED.getValue())
                     .errorCode("10001")
                     .description("Department does not exist = "+ department.getDepartmentName())
@@ -63,7 +62,7 @@ public class EmployeeService {
 
         employeeDto = employeeCommandService.createNewEmployee(employeeDto);
 
-        return respondDto.builder()
+        return EmployeeRespondDto.builder()
                 .status(RestEnum.STATUS_SUCCESS.getValue())
                 .employeeDto(employeeDto)
                 .build();
@@ -92,14 +91,13 @@ public class EmployeeService {
     public EmployeeRespondDto updateEmployee(EmployeeUpdateRequest request){
         UUID employeeId = request.getEmployeeDto().getId();
         EmployeeDto employeeDto = employeeQueryService.retrieveEmployeeById(employeeId);
-        EmployeeRespondDto respondDto = new EmployeeRespondDto();
 
         //check employee name duplicated
         if(employeeDto == null){
             log.error("Employee not found = {}", employeeDto.getName());
-            return respondDto.builder()
+            return EmployeeRespondDto.builder()
                     .status(RestEnum.STATUS_FAILED.getValue())
-                    .errorCode("10000")
+                    .errorCode("10002")
                     .description("Employee not found = "+employeeDto.getName())
                     .build();
         }
@@ -108,16 +106,16 @@ public class EmployeeService {
         Department department = departmentQueryService.findDepartmentById(newEmployeeDto.getId());
         if(department == null){
             log.error("Department not found = {}", employeeDto.getName());
-            return respondDto.builder()
+            return EmployeeRespondDto.builder()
                     .status(RestEnum.STATUS_FAILED.getValue())
-                    .errorCode("10000")
+                    .errorCode("10003")
                     .description("Department not found = "+employeeDto.getName())
                     .build();
         }
 
         newEmployeeDto = employeeCommandService.updateEmployeeInfo(newEmployeeDto, department);
 
-        return respondDto.builder()
+        return EmployeeRespondDto.builder()
                 .status(RestEnum.STATUS_SUCCESS.getValue())
                 .employeeDto(newEmployeeDto)
                 .build();
